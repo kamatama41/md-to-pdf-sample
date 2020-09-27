@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+env:
+  GOOGLE_OAUTH2_CREDENTIALS: ${{ secrets.GOOGLE_OAUTH2_CREDENTIALS }}
+  GOOGLE_OAUTH2_TOKEN: ${{ secrets.GOOGLE_OAUTH2_TOKEN }}
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -12,8 +15,16 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '12'
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.15'
       - name: Setup
-        run: yarn install
+        run: |
+          npm i -g md-to-pdf
+          mkdir credentials
+          echo ${GOOGLE_OAUTH2_CREDENTIALS} > credentials/credentials.json
+          echo ${GOOGLE_OAUTH2_TOKEN} > credentials/token.json
       - name: Generate PDF
-        run: make generate
-
+        run: make genpdf
+      - name: Uplpad PDF
+        run: make upload
