@@ -21,6 +21,7 @@ jobs:
       - name: Setup
         run: |
           npm i -g md-to-pdf
+          mkdir credentials
           echo ${GOOGLE_OAUTH2_CREDENTIALS} > credentials/credentials.json
           echo ${GOOGLE_OAUTH2_TOKEN} > credentials/token.json
       - name: Generate PDF
